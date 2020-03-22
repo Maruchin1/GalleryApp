@@ -17,14 +17,13 @@ import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
 import kotlinx.android.synthetic.main.fragment_photo_list.*
 import kotlinx.android.synthetic.main.item_photo.view.*
 
-class PhotoListFragment : Fragment() {
+class ImagesListFragment : Fragment() {
 
-    private lateinit var viewModel: PhotoViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProviders.of(requireActivity()).get(PhotoViewModel::class.java)
+    private val viewModel: ImagesViewModel by lazy {
+        ViewModelProviders.of(
+            requireActivity(),
+            ImagesViewModel.Factory()
+        ).get(ImagesViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -51,8 +50,7 @@ class PhotoListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
-        recycler_view.scrollToPosition(viewModel.getCurrPhotoPosition())
+        recycler_view.scrollToPosition(viewModel.getCurrImagePosition())
     }
 
     inner class PhotoListAdapter : RecyclerView.Adapter<PhotoListAdapter.PhotoViewHolder>() {
@@ -69,14 +67,14 @@ class PhotoListFragment : Fragment() {
         }
 
         override fun getItemCount(): Int {
-            return viewModel.getPhotosCount()
+            return viewModel.getImagesCount()
         }
 
         override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-            val photoId = viewModel.getPhotoId(position)
+            val image = viewModel.getImage(position)
 
             Glide.with(requireContext())
-                .load(photoId)
+                .load(image)
                 .into(holder.itemView.image_view)
 
             holder.itemView.image_view.setOnClickListener { view ->
@@ -85,11 +83,11 @@ class PhotoListFragment : Fragment() {
         }
 
         private fun openImage(position: Int, imageView: ImageView) {
-            viewModel.setCurrPhotoPosition(position)
+            viewModel.setCurrImagePosition(position)
 
             imageView.transitionName = "list_photo$position"
 
-            val photoZoomFragmentWithTransition = PhotoZoomFragment().apply {
+            val photoZoomFragmentWithTransition = ImagePreviewFragment().apply {
                 sharedElementEnterTransition = PhotoTransition()
                 enterTransition = Fade()
             }

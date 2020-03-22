@@ -1,7 +1,6 @@
 package com.example.galleryapp
 
 import android.os.Bundle
-import android.transition.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +11,14 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_photo_zoom.*
 import kotlinx.android.synthetic.main.item_photo.view.*
 
-class PhotoZoomFragment : Fragment() {
+class ImagePreviewFragment : Fragment() {
 
-    private lateinit var viewModel: PhotoViewModel
+    private lateinit var viewModel: ImagesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(requireActivity()).get(PhotoViewModel::class.java)
+        viewModel = ViewModelProviders.of(requireActivity()).get(ImagesViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -34,7 +33,7 @@ class PhotoZoomFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         view_pager.adapter = PhotoPagerAdapter()
-        view_pager.currentItem = viewModel.getCurrPhotoPosition()
+        view_pager.currentItem = viewModel.getCurrImagePosition()
     }
 
     inner class PhotoPagerAdapter : PagerAdapter() {
@@ -44,7 +43,7 @@ class PhotoZoomFragment : Fragment() {
         }
 
         override fun getCount(): Int {
-            return viewModel.getPhotosCount()
+            return viewModel.getImagesCount()
         }
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -52,10 +51,10 @@ class PhotoZoomFragment : Fragment() {
             val itemView = LayoutInflater.from(requireContext())
                 .inflate(R.layout.item_photo, container, false)
 
-            val photoId = viewModel.getPhotoId(position)
+            val image = viewModel.getImage(position)
 
             Glide.with(requireActivity())
-                .load(photoId)
+                .load(image)
                 .into(itemView.image_view)
 
             itemView.image_view.transitionName = "zoom_photo"

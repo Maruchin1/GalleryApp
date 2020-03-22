@@ -11,14 +11,25 @@ class ImagesViewModel(
 
     private var currImagePosition = 0
 
-    fun getImage(position: Int) = images[position]
+    fun getImage(position: Int): Uri {
+        checkPosition(position)
+        return images[position]
+    }
 
     fun getImagesCount() = images.size
 
     fun getCurrImagePosition() = currImagePosition
 
     fun setCurrImagePosition(newPosition: Int) {
+        checkPosition(newPosition)
         currImagePosition = newPosition
+    }
+
+    private fun checkPosition(position: Int) {
+        val isPositionCorrect = position in images.indices
+        if (!isPositionCorrect) {
+            throw IncorrectPosition()
+        }
     }
 
     class Factory(private val context: Context) : ViewModelProvider.Factory {
@@ -27,4 +38,6 @@ class ImagesViewModel(
             return ImagesViewModel(images) as T
         }
     }
+
+    class IncorrectPosition : Exception()
 }

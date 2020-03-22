@@ -44,4 +44,8 @@ dependencies {
     // GravitySnapHelper
     implementation 'com.github.rubensousa:gravitysnaphelper:2.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0-rc01'
+    //Truth
+    testImplementation "com.google.truth:truth:1.0.1"
+    //Robolectric
+    testImplementation "org.robolectric:robolectric:4.2.1"
 }

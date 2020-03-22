@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.fragment_photo_zoom.*
+import kotlinx.android.synthetic.main.fragment_image_preview.*
 import kotlinx.android.synthetic.main.item_photo.view.*
 
 class ImagePreviewFragment : Fragment() {
@@ -25,7 +25,7 @@ class ImagePreviewFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_photo_zoom, container, false)
+        return inflater.inflate(R.layout.fragment_image_preview, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
-import kotlinx.android.synthetic.main.fragment_photo_list.*
+import kotlinx.android.synthetic.main.fragment_images_list.*
 import kotlinx.android.synthetic.main.item_photo.view.*
 
 class ImagesListFragment : Fragment() {
@@ -35,7 +35,7 @@ class ImagesListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_photo_list, container, false)
+        return inflater.inflate(R.layout.fragment_images_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

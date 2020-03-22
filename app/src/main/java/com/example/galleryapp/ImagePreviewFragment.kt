@@ -30,9 +30,14 @@ class ImagePreviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupViewPager()
+    }
 
-        view_pager.adapter = PhotoPagerAdapter()
-        view_pager.currentItem = viewModel.getCurrImagePosition()
+    private fun setupViewPager() {
+        with(view_pager) {
+            adapter = PhotoPagerAdapter()
+            currentItem = viewModel.getCurrImagePosition()
+        }
     }
 
     inner class PhotoPagerAdapter : PagerAdapter() {
@@ -46,20 +51,14 @@ class ImagePreviewFragment : Fragment() {
         }
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
-
             val itemView = LayoutInflater.from(requireContext())
                 .inflate(R.layout.item_photo, container, false)
-
             val image = viewModel.getImage(position)
-
             Glide.with(requireActivity())
                 .load(image)
                 .into(itemView.image_view)
-
             itemView.image_view.transitionName = "zoom_photo"
-
             container.addView(itemView, 0)
-
             return itemView
         }
 

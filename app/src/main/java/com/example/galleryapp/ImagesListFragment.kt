@@ -18,6 +18,10 @@ import kotlinx.android.synthetic.main.fragment_photo_list.*
 import kotlinx.android.synthetic.main.item_photo.view.*
 
 class ImagesListFragment : Fragment() {
+    companion object {
+        private const val PORTRAIT_COLUMNS = 2
+        private const val LANDSCAPE_COLUMNS = 4
+    }
 
     private val viewModel: ImagesViewModel by lazy {
         ViewModelProviders.of(
@@ -31,21 +35,12 @@ class ImagesListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_photo_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val orientation = resources.configuration.orientation
-        val columnsCount = if (orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 4
-
-        recycler_view.adapter = PhotoListAdapter()
-        recycler_view.layoutManager = GridLayoutManager(requireContext(), columnsCount)
-
-        val snapHelper = GravitySnapHelper(Gravity.TOP)
-        snapHelper.attachToRecyclerView(recycler_view)
+        setupRecyclerView()
     }
 
     override fun onStart() {
@@ -53,30 +48,39 @@ class ImagesListFragment : Fragment() {
         recycler_view.scrollToPosition(viewModel.getCurrImagePosition())
     }
 
-    inner class PhotoListAdapter : RecyclerView.Adapter<PhotoListAdapter.PhotoViewHolder>() {
+    private fun setupRecyclerView() {
+        val columns = when (resources.configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> PORTRAIT_COLUMNS
+            else -> LANDSCAPE_COLUMNS
+        }
+        with(recycler_view) {
+            adapter = ImagesListAdapter()
+            layoutManager = GridLayoutManager(requireContext(), columns)
+            val snapHelper = GravitySnapHelper(Gravity.TOP)
+            snapHelper.attachToRecyclerView(this)
+        }
+    }
+
+    inner class ImagesListAdapter : RecyclerView.Adapter<ImagesListAdapter.ImageViewHolder>() {
 
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
-        ): PhotoViewHolder {
-
+        ): ImageViewHolder {
             val itemView = LayoutInflater.from(requireContext())
                 .inflate(R.layout.item_photo, parent, false)
-
-            return PhotoViewHolder(itemView)
+            return ImageViewHolder(itemView)
         }
 
         override fun getItemCount(): Int {
             return viewModel.getImagesCount()
         }
 
-        override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
             val image = viewModel.getImage(position)
-
             Glide.with(requireContext())
                 .load(image)
                 .into(holder.itemView.image_view)
-
             holder.itemView.image_view.setOnClickListener { view ->
                 openImage(position, view as ImageView)
             }
@@ -84,23 +88,22 @@ class ImagesListFragment : Fragment() {
 
         private fun openImage(position: Int, imageView: ImageView) {
             viewModel.setCurrImagePosition(position)
-
             imageView.transitionName = "list_photo$position"
-
-            val photoZoomFragmentWithTransition = ImagePreviewFragment().apply {
-                sharedElementEnterTransition = PhotoTransition()
-                enterTransition = Fade()
-            }
-
             exitTransition = Fade()
-
             requireFragmentManager().beginTransaction()
                 .addSharedElement(imageView, "zoom_photo")
                 .addToBackStack(null)
-                .replace(R.id.fragments_frame, photoZoomFragmentWithTransition)
+                .replace(R.id.fragments_frame, getImagePreviewFragment())
                 .commit()
         }
 
-        inner class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+        private fun getImagePreviewFragment(): Fragment {
+            return ImagePreviewFragment().apply {
+                sharedElementEnterTransition = PhotoTransition()
+                enterTransition = Fade()
+            }
+        }
+
+        inner class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     }
 }

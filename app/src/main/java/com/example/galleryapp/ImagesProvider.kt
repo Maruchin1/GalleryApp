@@ -4,17 +4,17 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
 
 class ImagesProvider(
     private val context: Context
 ) {
-    private val TAG = "ImagesProvider"
     private val images = mutableListOf<Uri>()
 
     init {
-        val contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        loadFromContent(contentUri)
+        val internalContentUri = MediaStore.Images.Media.INTERNAL_CONTENT_URI
+        val externalContentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        loadFromContent(internalContentUri)
+        loadFromContent(externalContentUri)
     }
 
     fun getImages(): List<Uri> {
@@ -27,7 +27,6 @@ class ImagesProvider(
         val columnIndexID: Int = content.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
         while (content.moveToNext()) {
             imageId = content.getLong(columnIndexID)
-            Log.d(TAG, "imageId: $imageId")
             val uriImage = Uri.withAppendedPath(contentUri, "" + imageId)
             images.add(uriImage)
         }

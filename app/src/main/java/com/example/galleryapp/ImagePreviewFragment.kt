@@ -13,12 +13,11 @@ import kotlinx.android.synthetic.main.item_photo.view.*
 
 class ImagePreviewFragment : Fragment() {
 
-    private lateinit var viewModel: ImagesViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProviders.of(requireActivity()).get(ImagesViewModel::class.java)
+    private val viewModel: ImagesViewModel by lazy {
+        ViewModelProviders.of(
+            requireActivity(),
+            ImagesViewModel.Factory(requireContext())
+        ).get(ImagesViewModel::class.java)
     }
 
     override fun onCreateView(

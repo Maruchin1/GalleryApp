@@ -22,7 +22,7 @@ class ImagesListFragment : Fragment() {
     private val viewModel: ImagesViewModel by lazy {
         ViewModelProviders.of(
             requireActivity(),
-            ImagesViewModel.Factory()
+            ImagesViewModel.Factory(requireContext())
         ).get(ImagesViewModel::class.java)
     }
 

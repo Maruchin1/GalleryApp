@@ -1,5 +1,6 @@
 package com.example.galleryapp
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -22,9 +23,9 @@ class ImagesViewModel(
 
     fun getCurrTransitionName() = "transition$currImagePosition"
 
-    class Factory : ViewModelProvider.Factory {
+    class Factory(private val context: Context) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            val images = ImagesProvider.getImages()
+            val images = ImagesProvider(context).getImages()
             return ImagesViewModel(images) as T
         }
     }

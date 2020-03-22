@@ -6,19 +6,19 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 
-object ImagesProvider {
+class ImagesProvider(
+    private val context: Context
+) {
     private val TAG = "ImagesProvider"
     private val images = mutableListOf<Uri>()
-    private lateinit var context: Context
+
+    init {
+        val contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        loadFromContent(contentUri)
+    }
 
     fun getImages(): List<Uri> {
         return images
-    }
-
-    fun init(context: Context) {
-        this.context = context
-        val contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        loadFromContent(contentUri)
     }
 
     private fun loadFromContent(contentUri: Uri) {

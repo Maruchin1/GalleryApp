@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (permissionsGranted()) {
-            ImagesProvider.init(this.applicationContext)
             loadHomeFragment()
         } else {
             loadNoPermissionsGrantedFragment()
@@ -54,7 +53,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleReadExternalStoragePermissionResult(grantResults: IntArray) {
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            ImagesProvider.init(this.applicationContext)
             loadHomeFragment()
         }
     }
